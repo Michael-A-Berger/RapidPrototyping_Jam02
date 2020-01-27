@@ -35,8 +35,6 @@ public class FloatText : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
-
         // Getting the current time to live
         float currentTime = Time.time;
         float timeLeft = (startTime + floatTime) - currentTime;
@@ -45,7 +43,7 @@ public class FloatText : MonoBehaviour
         textPro.text = displayText;
         textPro.fontSize = fontSize;
         textPro.color = displayColor;
-        
+
         // IF the time left is less than the fade time, make the text opaque
         if (timeLeft < startFadeTime)
         {
@@ -67,7 +65,43 @@ public class FloatText : MonoBehaviour
         // IF the time limit has been exceeded, delete this object
         if (currentTime > startTime + floatTime)
         {
-            Destroy(this.gameObject);
+            Destroy(gameObject);
+        }
+    }
+
+    static GameObject prefab = null;
+
+    public static void CreateFloatText(string text, Color colour, Vector3 position, Vector3 floatDirection, float fontSize = 12, float floatTime = 2, float floatSpeed = 1, float disappearPercentage = 0.5f)
+    {
+        if (!prefab)
+        {
+            prefab = Resources.Load<GameObject>("Float text");
+
+            FloatText inst = Instantiate(prefab, position, Quaternion.identity).GetComponent<FloatText>();
+            inst.displayColor = colour;
+            inst.displayText = text;
+            inst.floatDirection = floatDirection;
+            inst.fontSize = fontSize;
+            inst.floatTime = floatTime;
+            inst.floatSpeed = floatSpeed;
+            inst.disappearPercentage = disappearPercentage;
+        }
+    }
+
+    public static void CreateFloatText(string text, Color colour, Vector3 position, float fontSize = 12, float floatTime = 2, float floatSpeed = 1, float disappearPercentage = 0.5f)
+    {
+        if (!prefab)
+        {
+            prefab = Resources.Load<GameObject>("Float text");
+
+            FloatText inst = Instantiate(prefab, position, Quaternion.identity).GetComponent<FloatText>();
+            inst.displayColor = colour;
+            inst.displayText = text;
+            inst.floatDirection = Vector3.up;
+            inst.fontSize = fontSize;
+            inst.floatTime = floatTime;
+            inst.floatSpeed = floatSpeed;
+            inst.disappearPercentage = disappearPercentage;
         }
     }
 }
