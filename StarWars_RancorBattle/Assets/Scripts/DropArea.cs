@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class DropArea : MonoBehaviour
 {
-    Draggable holding;
+    public Draggable holding { get; private set; }
 
     Rect area;
     private void Start()
