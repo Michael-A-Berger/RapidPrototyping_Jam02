@@ -14,10 +14,10 @@ public class CharacterBase : MonoBehaviour
     int attack;
     [SerializeField]
     int special;
-    [SerializeField]
     public bool isDowned;
-    [SerializeField]
+    public GameObject currentEnemy;
     public GameObject currentTarget;
+    
 
     // Start is called before the first frame update
     void Awake()
@@ -29,6 +29,7 @@ public class CharacterBase : MonoBehaviour
                 defense = 4;
                 attack = 2;
                 special = 0;
+                currentTarget = gameObject;
                 break;
             case "Bo":
                 health = 4;
@@ -47,16 +48,19 @@ public class CharacterBase : MonoBehaviour
                 defense = 2;
                 attack = 2;
                 special = 0;
+                currentTarget = gameObject;
                 break;
             case "Ranc":
                 health = 20;
                 defense = 5;
                 attack = 3;
                 special = -1;
+                currentTarget = gameObject;
                 break;
         }
     }
 
+    // For debugging and checking status purposes
     public int Defense
     {
         get
@@ -65,21 +69,43 @@ public class CharacterBase : MonoBehaviour
         }
     }
 
+    public void IsDowned()
+    {
+        isDowned = !isDowned;
+    }
+
     // handles attacking phase
     public void Attacking(int extraDamage)
     {
-        if (Random.Range(1, 7) + attack < currentTarget.GetComponent<CharacterBase>().defense)
-        {
-            currentTarget.GetComponent<CharacterBase>().health -= attack + extraDamage;
-            if (name == "Ranc")
-                currentTarget.GetComponent<CharacterBase>().health += 2;
+        if (Random.Range(1, 7) + attack < currentEnemy.GetComponent<CharacterBase>().defense)
+        { 
+            currentEnemy.GetComponent<CharacterBase>().health -= attack + extraDamage; 
+            Debug.Log("HIT! - " + currentEnemy.GetComponent<CharacterBase>().health); 
+
         }
+        else 
+            Debug.Log("MISS! - " + currentEnemy.GetComponent<CharacterBase>().health);
     }
 
     // adds new special
     public void AddSpecial()
     {
         special++;
+    }
+
+    public void SelectTarget()
+    {
+        if (Input.GetMouseButtonDown(0))
+        {
+            Debug.Log("clicking...");
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit hit;
+
+            if (Physics.Raycast(ray, out hit, 100))
+            {
+                currentTarget = hit.transform.gameObject;
+            }
+        }
     }
 
     public void UseSpecial()
@@ -99,9 +125,12 @@ public class CharacterBase : MonoBehaviour
                 case "Jed":
                     currentTarget.GetComponent<CharacterBase>().isDowned = false;
                     currentTarget.GetComponent<CharacterBase>().health = 2;
+                    currentTarget = null;
                     break;
                 case "Bo":
                     currentTarget.GetComponent<CharacterBase>().health += 1;
+                    Debug.Log("HEAL! - " + currentTarget.GetComponent<CharacterBase>().health);
+                    currentTarget = null;
                     break;
             }
 
@@ -131,7 +160,7 @@ public class CharacterBase : MonoBehaviour
                 break;
             case 6:
                 // put this in a for loop for the main game loop
-                Attacking(0);
+                Attacking(-2);
                 break;
         }
     }
