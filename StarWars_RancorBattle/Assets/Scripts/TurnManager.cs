@@ -7,6 +7,9 @@ public class TurnManager : MonoBehaviour
     // Attributes
     public List<TurnProperty> objectList;
     public int currentIndex = 0;
+    public CameraMove cameraScript;
+    public Vector3 relativeCameraPos;
+    public Vector3 relativeCameraRot;
     public bool debug;
 
     // Properties
@@ -24,11 +27,28 @@ public class TurnManager : MonoBehaviour
             attemptingRound = true;
             currentIndex = 0;
             objectList[0].isCurrentTurn = true;
+            MoveCamera();
             if (debug)
             {
                 Debug.Log("Start of Round!");
                 Debug_CurrentTurn();
             }
+        }
+    }
+
+    // MoveCamera()
+    public void MoveCamera()
+    {
+        // IF the camera script exists...
+        if (cameraScript != null)
+        {
+            // Telling the camera to move to the new position + rotation
+            TurnProperty current = objectList[currentIndex];
+            Transform currentT = current.gameObject.transform;
+            Vector3 newLoc = currentT.position + currentT.rotation * relativeCameraPos;
+            Vector3 newRot = currentT.forward - relativeCameraRot;
+            cameraScript.targetPos = newLoc;
+            cameraScript.targetDir.SetLookRotation(newRot);
         }
     }
 
@@ -44,13 +64,17 @@ public class TurnManager : MonoBehaviour
                 // IF the current turn object has completed its action...
                 if (objectList[currentIndex].hasCompletedTurn)
                 {
+                    // Telling the current object that it's turn is over
                     objectList[currentIndex].isCurrentTurn = false;
                     currentIndex++;
 
                     // IF the previous object was not the last object...
                     if (currentIndex < objectList.Count)
                     {
+                        // Telling the next object that it is the current turn
                         objectList[currentIndex].isCurrentTurn = true;
+                        MoveCamera();
+
                         if (debug) Debug_CurrentTurn();
                     }
                 }

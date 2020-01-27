@@ -131,6 +131,7 @@ GameObject:
   - component: {fileID: 98511686}
   - component: {fileID: 98511685}
   - component: {fileID: 98511684}
+  - component: {fileID: 98511687}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -203,6 +204,22 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 38.11, y: 0, z: 0}
+--- !u!114 &98511687
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 98511683}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d54337ba22ba4f479a792ba6943b172, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  targetPos: {x: 0, y: 0, z: 0}
+  targetDir: {x: 0, y: 0, z: 0, w: 0}
+  translateSpeed: 0.1
+  rotateSpeed: 0.1
 --- !u!1 &163611319
 GameObject:
   m_ObjectHideFlags: 0
@@ -309,7 +326,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5d12cc4a7943d8b46b581ec033e161d5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  completedTurn: 0
+  isCurrentTurn: 0
+  hasCompletedTurn: 0
 --- !u!1 &775383300
 GameObject:
   m_ObjectHideFlags: 0
@@ -360,6 +378,9 @@ MonoBehaviour:
   - {fileID: 2136064177}
   - {fileID: 1923656882}
   currentIndex: 0
+  cameraScript: {fileID: 98511687}
+  relativeCameraPos: {x: 0, y: 4, z: -4}
+  relativeCameraRot: {x: 0, y: 1, z: 0}
   debug: 1
 --- !u!1 &823818646
 GameObject:
@@ -467,7 +488,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5d12cc4a7943d8b46b581ec033e161d5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  completedTurn: 0
+  isCurrentTurn: 0
+  hasCompletedTurn: 0
 --- !u!1 &934830891
 GameObject:
   m_ObjectHideFlags: 0
@@ -758,7 +780,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5d12cc4a7943d8b46b581ec033e161d5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  completedTurn: 0
+  isCurrentTurn: 0
+  hasCompletedTurn: 0
 --- !u!1 &1923656877
 GameObject:
   m_ObjectHideFlags: 0
@@ -845,13 +868,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1923656877}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
   m_LocalPosition: {x: 0, y: 1, z: -3}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 7
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
 --- !u!114 &1923656882
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -864,7 +887,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5d12cc4a7943d8b46b581ec033e161d5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  completedTurn: 0
+  isCurrentTurn: 0
+  hasCompletedTurn: 0
 --- !u!1 &2136064172
 GameObject:
   m_ObjectHideFlags: 0
@@ -971,4 +995,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5d12cc4a7943d8b46b581ec033e161d5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  completedTurn: 0
+  isCurrentTurn: 0
+  hasCompletedTurn: 0
