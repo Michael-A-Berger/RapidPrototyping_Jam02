@@ -394,9 +394,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   objectList:
   - {fileID: 163611324}
-  - {fileID: 1854968852}
-  - {fileID: 823818651}
-  - {fileID: 2136064177}
   - {fileID: 1923656882}
   currentIndex: 0
   cameraScript: {fileID: 98511687}

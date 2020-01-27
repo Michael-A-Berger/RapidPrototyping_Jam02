@@ -11,10 +11,13 @@ public class TurnManager : MonoBehaviour
     public Vector3 relativeCameraPos;
     public Vector3 relativeCameraRot;
     public bool debug;
-    bool special = false;
+    public bool gameOver = false;
 
     // Properties
     private bool attemptingRound = false;
+    private bool special = false;
+    private bool victory = false;
+    
 
     // StartRound()
     public void StartRound()
@@ -25,14 +28,21 @@ public class TurnManager : MonoBehaviour
         }
         else
         {
-            attemptingRound = true;
-            currentIndex = 0;
-            objectList[0].isCurrentTurn = true;
-            MoveCamera();
-            if (debug)
+            if (!gameOver)
             {
-                Debug.Log("Start of Round!");
-                Debug_CurrentTurn();
+                attemptingRound = true;
+                currentIndex = 0;
+                objectList[0].isCurrentTurn = true;
+                MoveCamera();
+                if (debug)
+                {
+                    Debug.Log("Start of Round!");
+                    Debug_CurrentTurn();
+                }
+            }
+            else
+            {
+                Debug.Log("Game has ended");
             }
         }
     }
@@ -56,6 +66,8 @@ public class TurnManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        EndGame();
+
         // IF the Turn Manager is attempting to complete a round...
         if (attemptingRound)
         {
@@ -64,8 +76,20 @@ public class TurnManager : MonoBehaviour
             {
 
                 ///
-                HandlePlayer();
-                HandleAI();
+                
+                if (currentIndex != objectList.Count - 1)
+                {
+                    if (objectList[currentIndex].GetComponent<CharacterBase>().isDowned)
+                        objectList[currentIndex].hasCompletedTurn = true;
+                    else
+                        HandlePlayer(); 
+                }
+                else
+                { 
+                    HandleAI(objectList[objectList.Count - 1].GetComponent<CharacterBase>()); 
+                    Debug.Log("AI TURN");
+                    objectList[Random.Range(0, objectList.Count - 1)].GetComponent<CharacterBase>().AddSpecial();
+                }
                 ///
 
                 // IF the current turn object has completed its action...
@@ -145,7 +169,6 @@ public class TurnManager : MonoBehaviour
         {
             // Grabs the player script from the current objects turn and 
             objectList[currentIndex].gameObject.GetComponent<CharacterBase>().Attacking(0);
-            //Debug.Log(objectList[currentIndex].transform.gameObject.GetComponent<CharacterBase>().currentEnemy.GetComponent<CharacterBase>().health);
 
             // Completes the players turn once Attacking(int) has finished
             objectList[currentIndex].hasCompletedTurn = true;
@@ -184,27 +207,69 @@ public class TurnManager : MonoBehaviour
         }
     }
 
-    void HandleAI()
+    void HandleAI(CharacterBase AI)
     {
-       
+        while (AI.currentEnemy == null)
+        {
+            int selectPlayer = Random.Range(0, objectList.Count - 1);
+            if (!objectList[selectPlayer].GetComponent<CharacterBase>().isDowned)
+                AI.currentEnemy = objectList[selectPlayer].gameObject;
+        }
+
+        int decisionValue = Random.Range(1, 7);
+        if (decisionValue != 6)
+            AI.AIDecision(decisionValue);
+        else
+        {
+            for (int x = 0; x < objectList.Count-1; x++)
+                if (!objectList[x].GetComponent<CharacterBase>().isDowned)
+                {
+                    AI.currentEnemy = objectList[x].gameObject;
+                    AI.AIDecision(4);
+                }
+            Debug.Log("AI - MultiAttack");
+            AI.currentEnemy = null;
+        }
+
+        objectList[objectList.Count - 1].hasCompletedTurn = true;
     }
 
     void EndGame()
     {
         int downedPlayers = 0;
-        for (int x = 0; x < objectList.Count; x++)
+        for (int x = 0; x < objectList.Count-1; x++)
         {
             if (objectList[x].gameObject.GetComponent<CharacterBase>().isDowned)
             {
                 downedPlayers++;
             }
-
         }
 
-        if (downedPlayers == objectList.Count - 1 && objectList[objectList.Count - 1].gameObject.GetComponent<CharacterBase>().isDowned == true)
+        if (objectList[objectList.Count - 1].GetComponent<CharacterBase>().isDowned == true)
+        {
+            // END GAME PLAYERS WIN
+            gameOver = true;
+            Debug.Log("PLAYERS WIN");
+            victory = true;
+            return;
+        }
+        else if (downedPlayers == objectList.Count - 1 && objectList[objectList.Count - 1].GetComponent<CharacterBase>().isDowned == false)
         {
             // END GAME PLAYERS LOSE
+            Debug.Log("AI WINS");
+            victory = false;
+            gameOver = true;
+            return;
         }
+    }
+
+    private void Start()
+    {
+        int startingBossHealth = 25;
+        for (int x = 0; x < objectList.Count - 1; x++)
+            startingBossHealth -= 5;
+
+        objectList[objectList.Count - 1].GetComponent<CharacterBase>().health -= startingBossHealth;
     }
     ///
 }

@@ -51,9 +51,9 @@ public class CharacterBase : MonoBehaviour
                 currentTarget = gameObject;
                 break;
             case "Ranc":
-                health = 20;
+                health += 30;
                 defense = 5;
-                attack = 3;
+                attack = 4;
                 special = -1;
                 currentTarget = gameObject;
                 break;
@@ -77,14 +77,19 @@ public class CharacterBase : MonoBehaviour
     // handles attacking phase
     public void Attacking(int extraDamage)
     {
-        if (Random.Range(1, 7) + attack < currentEnemy.GetComponent<CharacterBase>().defense)
+        int hitting = Random.Range(1, 7) + attack;
+        Debug.Log("TO HIT: " + hitting);
+        if (hitting > currentEnemy.GetComponent<CharacterBase>().defense)
         { 
             currentEnemy.GetComponent<CharacterBase>().health -= attack + extraDamage; 
-            Debug.Log("HIT! - " + currentEnemy.GetComponent<CharacterBase>().health); 
+            Debug.Log("HIT! - " + currentEnemy.GetComponent<CharacterBase>().name + ": " + currentEnemy.GetComponent<CharacterBase>().health); 
 
         }
         else 
-            Debug.Log("MISS! - " + currentEnemy.GetComponent<CharacterBase>().health);
+            Debug.Log("MISS! - " + currentEnemy.GetComponent<CharacterBase>().name + ": " + currentEnemy.GetComponent<CharacterBase>().health);
+
+        if (currentEnemy.GetComponent<CharacterBase>().health <= 0)
+            currentEnemy.GetComponent<CharacterBase>().IsDowned();
     }
 
     // adds new special
@@ -123,7 +128,7 @@ public class CharacterBase : MonoBehaviour
                         Attacking(0);
                     break;
                 case "Jed":
-                    currentTarget.GetComponent<CharacterBase>().isDowned = false;
+                    currentTarget.GetComponent<CharacterBase>().IsDowned();
                     currentTarget.GetComponent<CharacterBase>().health = 2;
                     currentTarget = null;
                     break;
@@ -148,19 +153,21 @@ public class CharacterBase : MonoBehaviour
         {
             case 1:
                 // nothing
+                Debug.Log("AI - Nothing");
+                currentEnemy = null;
                 break;
             case 2:
             case 3:
             case 4:
                 // Have player selected in the game loop through local player list
-                Attacking(0);
+                Attacking(-3);
+                Debug.Log("AI - Attacking");
+                currentEnemy = null;
                 break;
             case 5:
                 health += 1;
-                break;
-            case 6:
-                // put this in a for loop for the main game loop
-                Attacking(-2);
+                Debug.Log("AI - Healing - " + health);
+                currentEnemy = null;
                 break;
         }
     }
