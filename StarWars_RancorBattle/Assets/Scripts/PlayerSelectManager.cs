@@ -10,8 +10,7 @@ public class PlayerSelectManager : MonoBehaviour
     DropArea[] dropAreas;
     //Drop areas for selected areas, not-yet-selected areas
 
-    [SerializeField]
-    List<string> players = new List<string>();
+    public List<string> players = new List<string>();
 
     // Start is called before the first frame update
     void Start()
