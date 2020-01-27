@@ -196,13 +196,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 98511683}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: -10}
+  m_LocalRotation: {x: 0.32647863, y: -0, z: -0, w: 0.9452047}
+  m_LocalPosition: {x: 0, y: 10, z: -13.15}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 38.11, y: 0, z: 0}
 --- !u!1 &108697684
 GameObject:
   m_ObjectHideFlags: 0
@@ -216,7 +216,6 @@ GameObject:
   - component: {fileID: 108697687}
   - component: {fileID: 108697686}
   - component: {fileID: 108697685}
-  - component: {fileID: 108697690}
   m_Layer: 0
   m_Name: Bouncing Ball
   m_TagString: Untagged
@@ -313,19 +312,51 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &108697690
+--- !u!1 &643203706
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 643203707}
+  - component: {fileID: 643203708}
+  m_Layer: 0
+  m_Name: TextSpawner
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &643203707
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 643203706}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &643203708
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 108697684}
+  m_GameObject: {fileID: 643203706}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: adbc0a59de12f3d45bd2dfe6700fc14b, type: 3}
+  m_Script: {fileID: 11500000, guid: 6b677768e6bfb1e469d326acff6b8112, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rb: {fileID: 108697685}
+  floatTextPrefab: {fileID: 3522401092580619856, guid: 5e435b0d06add934ab8b4d52f43f6e77,
+    type: 3}
 --- !u!1 &934830891
 GameObject:
   m_ObjectHideFlags: 0
@@ -414,7 +445,7 @@ Transform:
   m_GameObject: {fileID: 934830891}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 3}
+  m_LocalScale: {x: 2, y: 1, z: 3}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 2
