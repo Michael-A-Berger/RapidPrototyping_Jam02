@@ -4,5 +4,11 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Scenes/Player Select.unity
+    guid: b7e1646d854415f4984c54865f8d7eb7
+  - enabled: 1
+    path: Assets/Scenes/berger_battle-start-test.unity
+    guid: 6fb809abdb9858a4b9bc2e63cb97d36c
   m_configObjects: {}
