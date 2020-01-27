@@ -2,33 +2,64 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using System;
 
 public class PlayerSelectManager : MonoBehaviour
 {
     [SerializeField]
-    DropArea[] selectusAreas; //Drop areas for selected areas
-    DropArea[] selendusAreas; //Drop areas for 
+    DropArea[] dropAreas;
+    //Drop areas for selected areas, not-yet-selected areas
+
+    [SerializeField]
+    List<string> players = new List<string>();
+
     // Start is called before the first frame update
     void Start()
     {
-        //testArea = GameObject.Find("Panel").GetComponent<DropArea>();
+
     }
 
-    public void CheckForDrop(Draggable item, PointerEventData eventData)
+    public void CheckForDrop(PointerEventData eventData)
     {
-        //if(PlayerSelecting)
-        //{
-        //    //Do player selecty things
-        //}
-        //else
-        //{
-        foreach(DropArea a in selectusAreas)
+        Draggable item = null;
+        int toInd = -1;
+        DropArea to = null;
+        for (int i = 0; i < dropAreas.Length; i++)
         {
-            if (a.DropCheck(eventData.position))
+            to = dropAreas[i];
+            if (to.DropCheck(eventData.position))
             {
-                item.transform.position = a.transform.position;
+                item = Draggable.FindFloating();
+                toInd = i;
+                break;
             }
         }
-        //}
+
+        if (!item) Draggable.ResetPositions(); //No one was dropped into a valid DropArea
+        else
+        {
+            if(!to)
+            {
+                throw new Exception("Waaaaaaah!");
+            }
+
+            //If it didn't even move...
+            DropArea from = item.home;
+            if (from == to)
+            {
+                Draggable.ResetPositions();
+                return;
+            }
+
+            int fromInd = Array.IndexOf(dropAreas, from);
+            from.Vacate();
+
+            //Oh boy. Watch out.
+            int howDo = (fromInd < 4 ? 1 : 0) + (toInd < 4 ? 2 : 0) + (to.con)
+
+
+
+            item.Settle(to);
+        }
     }
 }

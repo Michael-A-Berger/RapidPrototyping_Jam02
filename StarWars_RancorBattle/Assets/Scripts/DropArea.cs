@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class DropArea : MonoBehaviour
 {
-    Draggable contains;
+    Draggable holding;
 
     Rect area;
     private void Start()
@@ -19,8 +19,13 @@ public class DropArea : MonoBehaviour
         return area.Contains(position);
     }
 
-    public void Attach(Draggable item)
+    public void Accept(Draggable item)
     {
+        holding = item;
+    }
 
+    public void Vacate()
+    {
+        holding = null;
     }
 }

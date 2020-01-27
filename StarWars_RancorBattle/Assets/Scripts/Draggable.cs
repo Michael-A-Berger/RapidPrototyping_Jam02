@@ -7,32 +7,71 @@ public class Draggable : MonoBehaviour, IDragHandler, IDropHandler
 {
     PlayerSelectManager daMan;
     Vector2 lastPostition;
+    public DropArea home { get; private set; }
+    [SerializeField]
+    string starting;
 
-    public string Value { get; private set; }
-    public void SetPosition(Vector2 newP)
+    bool beingDragged = true;
+
+    static List<Draggable> instances = new List<Draggable>();
+    /// <summary>
+    /// Tellls every instance to set its position, if it is being draggged
+    /// </summary>
+    public static Draggable FindFloating()
     {
-        lastPostition = transform.position = newP;
+        foreach (Draggable d in instances)
+        {
+            if (d.beingDragged)
+            {
+                return d;
+            }
+        }
+        return null;
     }
 
-    public void ResetPosition()
+    public static void ResetPositions()
+    {
+        foreach (Draggable d in instances)
+        {
+            if(d.beingDragged) d.ResetPosition();
+        }
+    }
+
+
+    public string Value;
+
+
+    public void Settle(DropArea house)
+    {
+        beingDragged = false;
+        house.Accept(this);
+        home = house;
+        lastPostition = house.transform.position;
+        ResetPosition();
+    }
+
+    void ResetPosition()
     {
         transform.position = lastPostition;
     }
+
 
     // Start is called before the first frame update
     void Start()
     {
         daMan = GameObject.FindGameObjectWithTag("Manager").GetComponent<PlayerSelectManager>();
-        lastPostition = transform.position;
+        Settle(GameObject.Find(starting).GetComponent<DropArea>());
+        instances.Add(this);
     }
 
     public void OnDrag(PointerEventData eventData)
     {
+        beingDragged = true;
         transform.position = eventData.position;
     }
 
     public void OnDrop(PointerEventData eventData)
     {
-        daMan.CheckForDrop(this, eventData);
+        daMan.CheckForDrop(eventData);
     }
 }
