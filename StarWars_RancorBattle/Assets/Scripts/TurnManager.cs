@@ -11,6 +11,7 @@ public class TurnManager : MonoBehaviour
     public Vector3 relativeCameraPos;
     public Vector3 relativeCameraRot;
     public bool debug;
+    bool special = false;
 
     // Properties
     private bool attemptingRound = false;
@@ -61,6 +62,12 @@ public class TurnManager : MonoBehaviour
             // IF the current turn object is not the last object...
             if (currentIndex < objectList.Count)
             {
+
+                ///
+                HandlePlayer();
+                HandleAI();
+                ///
+
                 // IF the current turn object has completed its action...
                 if (objectList[currentIndex].hasCompletedTurn)
                 {
@@ -125,4 +132,79 @@ public class TurnManager : MonoBehaviour
     {
         Debug.Log("Object #" + (currentIndex + 1) + "'s turn...");
     }
+
+
+    ///
+    void HandlePlayer()
+    {
+        /// <summary>
+        /// Attacking Functionality
+        /// Test Code for checking if the Attacking(int) function works for players.
+        /// </summary>
+        if (Input.GetKeyUp(KeyCode.A))
+        {
+            // Grabs the player script from the current objects turn and 
+            objectList[currentIndex].gameObject.GetComponent<CharacterBase>().Attacking(0);
+            //Debug.Log(objectList[currentIndex].transform.gameObject.GetComponent<CharacterBase>().currentEnemy.GetComponent<CharacterBase>().health);
+
+            // Completes the players turn once Attacking(int) has finished
+            objectList[currentIndex].hasCompletedTurn = true;
+        }
+        // Activates boolean to begin special functionality for players
+        else if (Input.GetKeyDown(KeyCode.S))
+        {
+            special = true;
+            Debug.Log("SPECIAL STARTED...");
+        }
+
+        /// <summary>
+        /// Special Funcitonality
+        /// When the special boolean is true, it checks if the currentTarget object of the player is true.
+        /// If not, call the SelectTarget function of the player which checks for a mouse click on a gameObject.
+        /// If currentTarget recieves a valid element, activate the UseSpecial function, which activates the
+        /// players' special ability. Once finished; UseSpecial is called, special boolean changes back to false,
+        /// and the players' turn ends.
+        /// </summary>
+        if (special)
+        {
+            // Checks if currentTarget is null
+            if (objectList[currentIndex].gameObject.GetComponent<CharacterBase>().currentTarget == null)
+            {
+                // Waits for user to click on a valid object
+                objectList[currentIndex].gameObject.GetComponent<CharacterBase>().SelectTarget();
+            }
+            else
+            {
+                // Uses special ability and resets values to prepare for next players' turn
+                objectList[currentIndex].gameObject.GetComponent<CharacterBase>().UseSpecial();
+                Debug.Log("SPECIAL ENDED...");
+                special = false;
+                objectList[currentIndex].hasCompletedTurn = true;
+            }
+        }
+    }
+
+    void HandleAI()
+    {
+       
+    }
+
+    void EndGame()
+    {
+        int downedPlayers = 0;
+        for (int x = 0; x < objectList.Count; x++)
+        {
+            if (objectList[x].gameObject.GetComponent<CharacterBase>().isDowned)
+            {
+                downedPlayers++;
+            }
+
+        }
+
+        if (downedPlayers == objectList.Count - 1 && objectList[objectList.Count - 1].gameObject.GetComponent<CharacterBase>().isDowned == true)
+        {
+            // END GAME PLAYERS LOSE
+        }
+    }
+    ///
 }
