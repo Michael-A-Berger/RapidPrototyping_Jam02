@@ -71,7 +71,9 @@ public class FloatText : MonoBehaviour
 
     static GameObject prefab = null;
 
-    public static void CreateFloatText(string text, Color colour, Vector3 position, Vector3 floatDirection, float fontSize = 12, float floatTime = 2, float floatSpeed = 1, float disappearPercentage = 0.5f)
+    public static void CreateFloatText(string text, Color colour, Vector3 position, 
+        Vector3 floatDirection, float fontSize = 8, float floatTime = 1, 
+        float floatSpeed = 1, float disappearPercentage = 0.5f)
     {
         if (!prefab)
         {
@@ -88,20 +90,23 @@ public class FloatText : MonoBehaviour
         }
     }
 
-    public static void CreateFloatText(string text, Color colour, Vector3 position, float fontSize = 12, float floatTime = 2, float floatSpeed = 1, float disappearPercentage = 0.5f)
+    public static void CreateFloatText(string text, Color colour, 
+        Vector3 position, float fontSize = 8, float floatTime = 1, 
+        float floatSpeed = 1, float disappearPercentage = 0.5f)
     {
         if (!prefab)
         {
             prefab = Resources.Load<GameObject>("Float text");
-
-            FloatText inst = Instantiate(prefab, position, Quaternion.identity).GetComponent<FloatText>();
-            inst.displayColor = colour;
-            inst.displayText = text;
-            inst.floatDirection = Vector3.up;
-            inst.fontSize = fontSize;
-            inst.floatTime = floatTime;
-            inst.floatSpeed = floatSpeed;
-            inst.disappearPercentage = disappearPercentage;
         }
+
+
+        FloatText inst = Instantiate(prefab, position, Quaternion.identity).GetComponent<FloatText>();
+        inst.displayColor = colour;
+        inst.displayText = text;
+        inst.floatDirection = Vector3.up;
+        inst.fontSize = fontSize;
+        inst.floatTime = floatTime;
+        inst.floatSpeed = floatSpeed;
+        inst.disappearPercentage = disappearPercentage;
     }
 }

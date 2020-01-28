@@ -9,7 +9,7 @@ public class CameraMove : MonoBehaviour
     [SerializeField]
     float translateSpeed = 0.1f, rotateSpeed = 0.1f;
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         targetPos = transform.position;
         targetDir = transform.rotation;

@@ -6,6 +6,7 @@ using UnityEngine.EventSystems;
 public class Draggable : MonoBehaviour, IDragHandler, IDropHandler
 {
     PlayerSelectManager daMan;
+    PlayerReorderManager daOtherMan;
     Vector2 lastPostition;
     public DropArea home { get; private set; }
     [SerializeField]
@@ -60,7 +61,8 @@ public class Draggable : MonoBehaviour, IDragHandler, IDropHandler
     void Start()
     {
         daMan = GameObject.FindGameObjectWithTag("Manager").GetComponent<PlayerSelectManager>();
-        Settle(GameObject.Find(starting).GetComponent<DropArea>());
+        daOtherMan = GameObject.FindGameObjectWithTag("Manager").GetComponent<PlayerReorderManager>();
+        if (starting != "") Settle(GameObject.Find(starting).GetComponent<DropArea>());
         instances.Add(this);
     }
 
@@ -72,6 +74,13 @@ public class Draggable : MonoBehaviour, IDragHandler, IDropHandler
 
     public void OnDrop(PointerEventData eventData)
     {
-        daMan.CheckForDrop(eventData);
+        if (daMan)
+        {
+            daMan.CheckForDrop(eventData);
+        }
+        else
+        {
+            daOtherMan.CheckForDrop(eventData);
+        }
     }
 }

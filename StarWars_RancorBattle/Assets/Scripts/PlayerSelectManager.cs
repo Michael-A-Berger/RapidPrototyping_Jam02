@@ -12,12 +12,6 @@ public class PlayerSelectManager : MonoBehaviour
 
     public List<string> players = new List<string>();
 
-    // Start is called before the first frame update
-    void Start()
-    {
-
-    }
-
     public void CheckForDrop(PointerEventData eventData)
     {
         Draggable item = null;

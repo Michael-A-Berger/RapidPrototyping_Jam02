@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 2486083396211408688}
   - component: {fileID: 9143861295350204459}
   - component: {fileID: 4636410326143333733}
-  - component: {fileID: 2892861141675450206}
   m_Layer: 0
   m_Name: Mandalorian
   m_TagString: Untagged
@@ -79,20 +78,6 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!136 &2892861141675450206
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5646448938835436386}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  m_Radius: 0.5
-  m_Height: 2
-  m_Direction: 1
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &7798586184337180960
 GameObject:
   m_ObjectHideFlags: 0
@@ -102,6 +87,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7344066340798541507}
+  - component: {fileID: -2497855113328814259}
+  - component: {fileID: 6818323664419286821}
   m_Layer: 0
   m_Name: Mandalorian
   m_TagString: Untagged
@@ -124,3 +111,39 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &-2497855113328814259
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7798586184337180960}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d71f09c9de3d15948b86f764574b2b63, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  charName: Mando
+  health: 0
+  defense: 0
+  attack: 0
+  special: 0
+  isDowned: 0
+  currentEnemy: {fileID: 0}
+  currentTarget: {fileID: 0}
+  isCurrentTurn: 0
+  hasCompletedTurn: 0
+--- !u!136 &6818323664419286821
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7798586184337180960}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 0.5
+  m_Height: 2
+  m_Direction: 1
+  m_Center: {x: 0, y: 1, z: 0}

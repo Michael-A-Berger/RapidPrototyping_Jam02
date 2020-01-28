@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TurnProperty : MonoBehaviour
+public class TurnPooperty : MonoBehaviour
 {
     // Attributes
     public bool isCurrentTurn = false;

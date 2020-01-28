@@ -9,6 +9,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9123899624644286016}
+  - component: {fileID: 7079976508380677617}
+  - component: {fileID: 8557543664207946873}
   m_Layer: 0
   m_Name: Bounty Hunter
   m_TagString: Untagged
@@ -31,6 +33,41 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7079976508380677617
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5359209776219877567}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d71f09c9de3d15948b86f764574b2b63, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  charName: Bo
+  health: 0
+  defense: 0
+  attack: 0
+  special: 0
+  isDowned: 0
+  currentEnemy: {fileID: 0}
+  currentTarget: {fileID: 0}
+  isCurrentTurn: 0
+  hasCompletedTurn: 0
+--- !u!135 &8557543664207946873
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5359209776219877567}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.7270195
+  m_Center: {x: 0, y: 0.7270195, z: 0}
 --- !u!1 &6372927020625091771
 GameObject:
   m_ObjectHideFlags: 0
@@ -42,7 +79,6 @@ GameObject:
   - component: {fileID: 2786549218447261471}
   - component: {fileID: 5470247209137735704}
   - component: {fileID: 6779895257736823306}
-  - component: {fileID: 6481979764360361902}
   m_Layer: 0
   m_Name: Bounty Hunter
   m_TagString: Untagged
@@ -58,7 +94,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6372927020625091771}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.5, z: 0}
+  m_LocalPosition: {x: 0, y: 0.7270195, z: 0}
   m_LocalScale: {x: 1.454039, y: 1.454039, z: 1.454039}
   m_Children: []
   m_Father: {fileID: 9123899624644286016}
@@ -110,16 +146,3 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!135 &6481979764360361902
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6372927020625091771}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.5
-  m_Center: {x: 0, y: 0, z: 0}

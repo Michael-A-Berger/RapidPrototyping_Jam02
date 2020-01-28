@@ -10,14 +10,19 @@ public class BattleStarter : MonoBehaviour
     List<string> players;
     [SerializeField]
     GameObject mandoPref, wookPref, jedPref, boPref;
+    [SerializeField]
+    TurnManager turnyBernie;
     readonly Vector3 separation = 2.5f * Vector3.right;
     Vector3 center = new Vector3(0, 0, -5);
     Vector3[] spawnLocations;
     public string playerPrefsKey = "";
     public bool debug = false;
 
+    public static bool speed = false;
+
     // Properties
-    private List<GameObject> playerObjects = new List<GameObject>();
+    private List<CharacterBase> playerObjects = new List<CharacterBase>();
+    private CharacterBase boss;
 
     // Start is called before the first frame update
     void Start()
@@ -45,6 +50,8 @@ public class BattleStarter : MonoBehaviour
                 spawnLocations[i] = start + i * separation;
             }
 
+            turnyBernie.objectList = new List<CharacterBase>();
+            turnyBernie.spawnPositions = spawnLocations;
 
             // Spawning the players
             for (int num = 0; num < players.Count; num++)
@@ -73,16 +80,41 @@ public class BattleStarter : MonoBehaviour
                 }
 
                 // Spawning the current game object in the right spawn location
-                if (current != null)
-                {
-                    playerObjects.Add(Instantiate(current, spawnLocations[num], Quaternion.identity));
-                }
+                if (current == null)
+                    throw new Exception("Player prefab not found??? The character requested was \"" + players[num] + "\".");
 
+                CharacterBase script = Instantiate(current, spawnLocations[num], Quaternion.identity).GetComponent<CharacterBase>();
+                playerObjects.Add(script);
+                turnyBernie.objectList.Add(script);
             }
-        }
+            GameObject badddie = GameObject.Find("Rancor");
+            boss = badddie.GetComponent<CharacterBase>();
 
-        FloatText.CreateFloatText("Battle start!", new Color(0x7F, 0xFF, 0x00), center + Vector3.up * 1 + Vector3.forward, 8, 1.5f, 0.5f);
+            foreach(CharacterBase player in playerObjects)
+            {
+                player.currentEnemy = boss;
+            }
+
+            turnyBernie.objectList.Add(boss);
+            /*
+            int startingBossHealth = 25;
+            for (int x = 0; x < playerObjects.Count - 1; x++)
+                startingBossHealth -= 5;
+
+            badddie.GetComponent<CharacterBase>().health -= startingBossHealth;
+            */
+            boss.health = 15 + 5 * (playerObjects.Count);
+
+            FloatText.CreateFloatText(
+                "Battle start!",
+                new Color(0x7F, 0xFF, 0x00),
+                center + Vector3.up * 2 + Vector3.forward,
+                8, 1.5f, 0.5f
+            );
+        }
     }
+
+
 
     // Update is called once per frame
     void Update()

@@ -1,11 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class TurnManager : MonoBehaviour
 {
     // Attributes
-    public List<TurnProperty> objectList;
+    public GameObject reorderMenu;
+    public List<CharacterBase> objectList;
     public int currentIndex = 0;
     public CameraMove cameraScript;
     public Vector3 relativeCameraPos;
@@ -17,7 +19,11 @@ public class TurnManager : MonoBehaviour
     private bool attemptingRound = false;
     private bool special = false;
     private bool victory = false;
-    
+    private PlayerReorderManager reorderer;
+
+    [SerializeField]
+    private bool paused = false;
+        
 
     // StartRound()
     public void StartRound()
@@ -30,20 +36,59 @@ public class TurnManager : MonoBehaviour
         {
             if (!gameOver)
             {
-                attemptingRound = true;
-                currentIndex = 0;
-                objectList[0].isCurrentTurn = true;
-                MoveCamera();
-                if (debug)
-                {
-                    Debug.Log("Start of Round!");
-                    Debug_CurrentTurn();
-                }
+                LookFrom(new Vector3(0, 14, -5), new Vector3(0, 0, -4));
+                paused = true;
+                StartCoroutine("Reorder");
             }
             else
             {
+                SceneManager.LoadScene("Player Select");
                 Debug.Log("Game has ended");
             }
+        }
+    }
+
+    IEnumerator Reorder()
+    {
+        reorderMenu.SetActive(true);
+        reorderer.Init(objectList);
+
+        Dictionary<string, CharacterBase> fromNames = new Dictionary<string, CharacterBase>();
+        foreach(CharacterBase c in objectList)
+        {
+            if(c.name != "Ranc") fromNames.Add(c.charName, c);
+        }
+
+        while(!reorderer.done)
+        {
+            yield return null;
+        }
+
+        reorderMenu.SetActive(false);
+        attemptingRound = true;
+
+        Reposition(fromNames, reorderer.players);
+
+
+        currentIndex = 0;
+        objectList[0].isCurrentTurn = true;
+        MoveCamera();
+        if (debug)
+        {
+            Debug.Log("Start of Round!");
+            Debug_CurrentTurn();
+        }
+        paused = false;
+    }
+
+    public Vector3[] spawnPositions;
+    void Reposition(Dictionary<string, CharacterBase> ids, List<string> order)
+    {
+        for (int i = 0; i < order.Count; i++)
+        {
+            string p = order[i];
+            ids[p].transform.position = spawnPositions[i];
+            objectList[i] = ids[p];
         }
     }
 
@@ -54,19 +99,24 @@ public class TurnManager : MonoBehaviour
         if (cameraScript != null)
         {
             // Telling the camera to move to the new position + rotation
-            TurnProperty current = objectList[currentIndex];
+            CharacterBase current = objectList[currentIndex];
             Transform currentT = current.gameObject.transform;
             Vector3 newLoc = currentT.position + currentT.rotation * relativeCameraPos;
-            Vector3 newRot = currentT.forward - relativeCameraRot;
+            Vector3 newRot = currentT.rotation * relativeCameraRot;
             cameraScript.targetPos = newLoc;
             cameraScript.targetDir.SetLookRotation(newRot);
+        }
+        else
+        {
+            throw new System.Exception("Turn manager neeeds acccesss to a camera script. Where'd you put it you nitwit???");
         }
     }
 
     // Update is called once per frame
     void Update()
     {
-        EndGame();
+        if (paused) return;
+        CheckForEndGame();
 
         // IF the Turn Manager is attempting to complete a round...
         if (attemptingRound)
@@ -80,15 +130,20 @@ public class TurnManager : MonoBehaviour
                 if (currentIndex != objectList.Count - 1)
                 {
                     if (objectList[currentIndex].GetComponent<CharacterBase>().isDowned)
-                        objectList[currentIndex].hasCompletedTurn = true;
+                        objectList[currentIndex].CompleteTurn();
                     else
-                        HandlePlayer(); 
+                    {
+                        HandlePlayer();
+                        if (paused) return;
+                    }
                 }
                 else
                 { 
                     HandleAI(objectList[objectList.Count - 1].GetComponent<CharacterBase>()); 
                     Debug.Log("AI TURN");
-                    objectList[Random.Range(0, objectList.Count - 1)].GetComponent<CharacterBase>().AddSpecial();
+                    CharacterBase recipient = objectList[Random.Range(0, objectList.Count - 1)];
+                    recipient.AddSpecial();
+                    FloatText.CreateFloatText("Specialable", new Color(1, 1, 0), recipient.transform.position + 2 * Vector3.up);
                 }
                 ///
 
@@ -98,6 +153,7 @@ public class TurnManager : MonoBehaviour
                     // Telling the current object that it's turn is over
                     objectList[currentIndex].isCurrentTurn = false;
                     currentIndex++;
+                    special = false;
 
                     // IF the previous object was not the last object...
                     if (currentIndex < objectList.Count)
@@ -114,14 +170,40 @@ public class TurnManager : MonoBehaviour
             {
                 // End the round
                 attemptingRound = false;
-                foreach (TurnProperty prop in objectList)
+                foreach (CharacterBase prop in objectList)
                 {
                     prop.hasCompletedTurn = false;
                     prop.isCurrentTurn = false;
                 }
                 if (debug) Debug.Log("End of Round!");
+                
+                StartRound();
             }
         }
+    }
+
+    void Look(Vector3 where)
+    {
+        Vector3 cameraDir = where - cameraScript.transform.position;
+        cameraScript.targetDir = Quaternion.LookRotation(cameraDir);
+    }
+
+    void LookFrom(Vector3 source, Vector3 target)
+    {
+        Vector3 cameraDir = target - source;
+        cameraScript.targetDir = Quaternion.LookRotation(cameraDir);
+        cameraScript.targetPos = source;
+    }
+
+    IEnumerator Stop(float howLong)
+    {
+        float timer = 1;
+        while (timer >= 0)
+        {
+            timer -= Time.deltaTime;
+            yield return null;
+        }
+        paused = false;
     }
 
     // LateUpdate()
@@ -140,7 +222,7 @@ public class TurnManager : MonoBehaviour
                 {
                     if (keyCode - 49 < objectList.Count)
                     {
-                        objectList[keyCode - 49].hasCompletedTurn = true;
+                        objectList[keyCode - 49].CompleteTurn();
                     }
                     else
                     {
@@ -161,6 +243,11 @@ public class TurnManager : MonoBehaviour
     ///
     void HandlePlayer()
     {
+        if (special)
+        {
+            objectList[currentIndex].UseSpecial();
+            return;
+        }
         /// <summary>
         /// Attacking Functionality
         /// Test Code for checking if the Attacking(int) function works for players.
@@ -168,16 +255,41 @@ public class TurnManager : MonoBehaviour
         if (Input.GetKeyUp(KeyCode.A))
         {
             // Grabs the player script from the current objects turn and 
-            objectList[currentIndex].gameObject.GetComponent<CharacterBase>().Attacking(0);
+            objectList[currentIndex].Attacking(0);
 
             // Completes the players turn once Attacking(int) has finished
-            objectList[currentIndex].hasCompletedTurn = true;
+            objectList[currentIndex].CompleteTurn();
+
+            if (!BattleStarter.speed)
+            {
+                Look(objectList[currentIndex].currentEnemy.transform.position);
+                StartCoroutine("Stop", 1);
+
+                paused = true;
+            }
         }
         // Activates boolean to begin special functionality for players
         else if (Input.GetKeyDown(KeyCode.S))
         {
-            special = true;
-            Debug.Log("SPECIAL STARTED...");
+            if (objectList[currentIndex].CanSpecial)
+            {
+                special = true;
+                Debug.Log("SPECIAL STARTED...");
+
+                if (!BattleStarter.speed)
+                {
+                    FloatText.CreateFloatText("Specialing...", Color.black,
+                        objectList[currentIndex].transform.position + 2 * Vector3.up);
+                    LookFrom(new Vector3(0, 14, -5), new Vector3(0, 0, -4));
+                    //StartCoroutine("Stop", 0.1f);
+                    paused = true;
+                }
+            }
+            else
+            {
+                FloatText.CreateFloatText("Can't special", Color.black,
+                    objectList[currentIndex].transform.position + 2*Vector3.up);
+            }
         }
 
         /// <summary>
@@ -202,7 +314,7 @@ public class TurnManager : MonoBehaviour
                 objectList[currentIndex].gameObject.GetComponent<CharacterBase>().UseSpecial();
                 Debug.Log("SPECIAL ENDED...");
                 special = false;
-                objectList[currentIndex].hasCompletedTurn = true;
+                objectList[currentIndex].CompleteTurn();
             }
         }
     }
@@ -213,7 +325,7 @@ public class TurnManager : MonoBehaviour
         {
             int selectPlayer = Random.Range(0, objectList.Count - 1);
             if (!objectList[selectPlayer].GetComponent<CharacterBase>().isDowned)
-                AI.currentEnemy = objectList[selectPlayer].gameObject;
+                AI.currentEnemy = objectList[selectPlayer];
         }
 
         int decisionValue = Random.Range(1, 7);
@@ -224,17 +336,23 @@ public class TurnManager : MonoBehaviour
             for (int x = 0; x < objectList.Count-1; x++)
                 if (!objectList[x].GetComponent<CharacterBase>().isDowned)
                 {
-                    AI.currentEnemy = objectList[x].gameObject;
+                    AI.currentEnemy = objectList[x];
                     AI.AIDecision(4);
                 }
             Debug.Log("AI - MultiAttack");
             AI.currentEnemy = null;
         }
 
-        objectList[objectList.Count - 1].hasCompletedTurn = true;
+        objectList[objectList.Count - 1].CompleteTurn();
+
+        StartCoroutine("Stop", 1);
+        paused = true;
     }
 
-    void EndGame()
+    /// <summary>
+    /// Actuallly, CHECK for end-of-game. Sets the values of victory and gameOver acccordingly (I asssume)
+    /// </summary>
+    void CheckForEndGame()
     {
         int downedPlayers = 0;
         for (int x = 0; x < objectList.Count-1; x++)
@@ -263,13 +381,15 @@ public class TurnManager : MonoBehaviour
         }
     }
 
+    private void Awake()
+    {
+        reorderer = reorderMenu.GetComponent<PlayerReorderManager>();
+        reorderMenu.SetActive(false);
+    }
+
     private void Start()
     {
-        int startingBossHealth = 25;
-        for (int x = 0; x < objectList.Count - 1; x++)
-            startingBossHealth -= 5;
-
-        objectList[objectList.Count - 1].GetComponent<CharacterBase>().health -= startingBossHealth;
+        StartRound();
     }
     ///
 }

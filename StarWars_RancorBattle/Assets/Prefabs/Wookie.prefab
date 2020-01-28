@@ -9,6 +9,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2848106978692014455}
+  - component: {fileID: 2502453883634830619}
+  - component: {fileID: 8201745654095438824}
   m_Layer: 0
   m_Name: Wookie
   m_TagString: Untagged
@@ -31,6 +33,42 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2502453883634830619
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2135069153076064136}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d71f09c9de3d15948b86f764574b2b63, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  charName: Wook
+  health: 0
+  defense: 0
+  attack: 0
+  special: 0
+  isDowned: 0
+  currentEnemy: {fileID: 0}
+  currentTarget: {fileID: 0}
+  isCurrentTurn: 0
+  hasCompletedTurn: 0
+--- !u!136 &8201745654095438824
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2135069153076064136}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 0.5
+  m_Height: 2
+  m_Direction: 1
+  m_Center: {x: 0, y: 1, z: 0}
 --- !u!1 &7889578864721368017
 GameObject:
   m_ObjectHideFlags: 0
@@ -42,7 +80,6 @@ GameObject:
   - component: {fileID: 7580346000798355164}
   - component: {fileID: 8829781474051166444}
   - component: {fileID: 1300598229657292481}
-  - component: {fileID: 5007006518581374933}
   m_Layer: 0
   m_Name: Wookie
   m_TagString: Untagged
@@ -110,17 +147,3 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!136 &5007006518581374933
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7889578864721368017}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  m_Radius: 0.5000001
-  m_Height: 2
-  m_Direction: 1
-  m_Center: {x: 0.000000059604645, y: 0, z: -0.00000008940697}
