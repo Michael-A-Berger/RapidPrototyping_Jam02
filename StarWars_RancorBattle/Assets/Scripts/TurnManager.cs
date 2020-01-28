@@ -30,7 +30,7 @@ public class TurnManager : MonoBehaviour
     // StartRound()
     public void StartRound()
     {
-        FloatText.CreateFloatText("Round start", Color.black, Vector3.zero);
+        //FloatText.CreateFloatText("Round start", Color.black, Vector3.zero);
         print("StartRound");
         if (objectList.Count < 1)
         {
