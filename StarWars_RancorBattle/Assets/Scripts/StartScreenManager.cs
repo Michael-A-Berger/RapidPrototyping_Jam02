@@ -9,9 +9,11 @@ public class StartScreenManager : MonoBehaviour
     // Attributes
     public Button startButton;
     public string nextScene = "";
+    public Button controlsButton;
     public Button creditsButton;
     public Button quitButton;
     public Button backToMenuButton;
+    public Text controlsText;
     public Text creditText;
     public bool debug = false;
 
@@ -20,9 +22,22 @@ public class StartScreenManager : MonoBehaviour
     {
         // Setting the event handlers
         startButton.onClick.AddListener(StartGame);
+        controlsButton.onClick.AddListener(ShowControls);
         creditsButton.onClick.AddListener(ShowCredits);
         quitButton.onClick.AddListener(QuitGame);
-        backToMenuButton.onClick.AddListener(ExitCredits);
+        backToMenuButton.onClick.AddListener(ExitSubmenu);
+    }
+
+    /// <summary>
+    /// SetMainMenuVisibility() - Shows or hides the main menu options (based on "enabled")
+    /// </summary>
+    /// <param name="enabled"></param>
+    public void SetMainMenuVisibility(bool enabled)
+    {
+        startButton.gameObject.SetActive(enabled);
+        controlsButton.gameObject.SetActive(enabled);
+        creditsButton.gameObject.SetActive(enabled);
+        quitButton.gameObject.SetActive(enabled);
     }
 
     /// <summary>
@@ -44,6 +59,16 @@ public class StartScreenManager : MonoBehaviour
         }
     }
 
+    public void ShowControls()
+    {
+        if (debug) Debug.Log("ShowControls() called!");
+        SetMainMenuVisibility(false);
+
+        // Showing the controls info
+        backToMenuButton.gameObject.SetActive(true);
+        controlsText.gameObject.SetActive(true);
+    }
+
     /// <summary>
     /// ShowCredits() - Shows the credits of the game
     /// </summary>
@@ -51,9 +76,7 @@ public class StartScreenManager : MonoBehaviour
     {
         if (debug) Debug.Log("ShowCredits() called!");
         // Hiding the main menu options
-        startButton.gameObject.SetActive(false);
-        creditsButton.gameObject.SetActive(false);
-        quitButton.gameObject.SetActive(false);
+        SetMainMenuVisibility(false);
 
         // Showing the credits info
         backToMenuButton.gameObject.SetActive(true);
@@ -70,18 +93,17 @@ public class StartScreenManager : MonoBehaviour
     }
 
     /// <summary>
-    /// ExitCredits() - Exits the credit (and shows the main menus)
+    /// ExitSubmenu() - Exits the submenu (and shows the main menus)
     /// </summary>
-    public void ExitCredits()
+    public void ExitSubmenu()
     {
-        if (debug) Debug.Log("ExitCredits() called!");
+        if (debug) Debug.Log("ExitSubmenu() called!");
         // Hiding the credits stuff
         backToMenuButton.gameObject.SetActive(false);
         creditText.gameObject.SetActive(false);
+        controlsText.gameObject.SetActive(false);
 
         // Showing the main menu items
-        startButton.gameObject.SetActive(true);
-        creditsButton.gameObject.SetActive(true);
-        quitButton.gameObject.SetActive(true);
+        SetMainMenuVisibility(true);
     }
 }
