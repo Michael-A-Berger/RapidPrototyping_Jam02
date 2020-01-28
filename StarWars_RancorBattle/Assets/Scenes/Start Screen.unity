@@ -194,7 +194,10 @@ MonoBehaviour:
     Game created by Elliot Privateer, Enan Munzar, and Michael Berger.
 
 
-    Art created by Unity''s component system.'
+    Art created by Unity''s component system.
+
+
+    "StarJedi Special Edition" font taken from fontspace.com'
 --- !u!222 &337378664
 CanvasRenderer:
   m_ObjectHideFlags: 0
