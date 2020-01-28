@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
 public class TurnManager : MonoBehaviour
@@ -14,11 +15,12 @@ public class TurnManager : MonoBehaviour
     public Vector3 relativeCameraRot;
     public bool debug;
     public bool gameOver = false;
+    public Canvas endCanvas;
+    public List<Text> victoryDefeat;
 
     // Properties
     private bool attemptingRound = false;
     private bool special = false;
-    private bool victory = false;
     private PlayerReorderManager reorderer;
 
     [SerializeField]
@@ -28,6 +30,8 @@ public class TurnManager : MonoBehaviour
     // StartRound()
     public void StartRound()
     {
+        //FloatText.CreateFloatText("Round start", Color.black, Vector3.zero);
+        print("StartRound");
         if (objectList.Count < 1)
         {
             Debug.LogError("'objectList' in TurnManager is not defined!");
@@ -42,7 +46,7 @@ public class TurnManager : MonoBehaviour
             }
             else
             {
-                SceneManager.LoadScene("Player Select");
+                //SceneManager.LoadScene("Player Select");
                 Debug.Log("Game has ended");
             }
         }
@@ -50,9 +54,10 @@ public class TurnManager : MonoBehaviour
 
     IEnumerator Reorder()
     {
+        print("Reordering?");
         reorderMenu.SetActive(true);
         reorderer.Init(objectList);
-
+        reorderer.done = false;
         Dictionary<string, CharacterBase> fromNames = new Dictionary<string, CharacterBase>();
         foreach(CharacterBase c in objectList)
         {
@@ -371,17 +376,32 @@ public class TurnManager : MonoBehaviour
             // END GAME PLAYERS WIN
             gameOver = true;
             Debug.Log("PLAYERS WIN");
-            victory = true;
+            ShowEndScreen(true);
             return;
         }
         else if (downedPlayers == objectList.Count - 1 && objectList[objectList.Count - 1].GetComponent<CharacterBase>().isDowned == false)
         {
             // END GAME PLAYERS LOSE
             Debug.Log("AI WINS");
-            victory = false;
             gameOver = true;
+            ShowEndScreen(false);
             return;
         }
+    }
+
+    void ShowEndScreen(bool victory)
+    {
+        endCanvas.gameObject.SetActive(true);
+
+        if (victory)       
+            victoryDefeat[0].gameObject.SetActive(true);
+        else
+            victoryDefeat[1].gameObject.SetActive(true);
+    }
+
+    public void GoToMainMenu()
+    {
+        SceneManager.LoadScene("Start Screen");
     }
 
     private void Awake()
