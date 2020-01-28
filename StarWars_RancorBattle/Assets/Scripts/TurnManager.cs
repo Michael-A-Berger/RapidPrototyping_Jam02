@@ -28,6 +28,8 @@ public class TurnManager : MonoBehaviour
     // StartRound()
     public void StartRound()
     {
+        FloatText.CreateFloatText("Round start", Color.black, Vector3.zero);
+        print("StartRound");
         if (objectList.Count < 1)
         {
             Debug.LogError("'objectList' in TurnManager is not defined!");
@@ -50,9 +52,10 @@ public class TurnManager : MonoBehaviour
 
     IEnumerator Reorder()
     {
+        print("Reordering?");
         reorderMenu.SetActive(true);
         reorderer.Init(objectList);
-
+        reorderer.done = false;
         Dictionary<string, CharacterBase> fromNames = new Dictionary<string, CharacterBase>();
         foreach(CharacterBase c in objectList)
         {
