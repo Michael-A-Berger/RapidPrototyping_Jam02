@@ -86,14 +86,21 @@ public class TurnManager : MonoBehaviour
         paused = false;
     }
 
+    [SerializeField]
+    GameObject statPref;
     public Vector3[] spawnPositions;
     void Reposition(Dictionary<string, CharacterBase> ids, List<string> order)
     {
+        foreach (GameObject s in GameObject.FindGameObjectsWithTag("Stat"))
+        {
+            Destroy(s);
+        }
         for (int i = 0; i < order.Count; i++)
         {
             string p = order[i];
             ids[p].transform.position = spawnPositions[i];
             objectList[i] = ids[p];
+            Instantiate(statPref).GetComponent<StatDisplay>().SetCharacter(objectList[i]);
         }
     }
 
