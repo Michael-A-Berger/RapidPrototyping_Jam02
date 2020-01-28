@@ -284,7 +284,7 @@ public class TurnManager : MonoBehaviour
                     FloatText.CreateFloatText("Specialing...", Color.black,
                         objectList[currentIndex].transform.position + 2 * Vector3.up);
                     LookFrom(new Vector3(0, 14, -5), new Vector3(0, 0, -4));
-                    //StartCoroutine("Stop", 0.1f);
+                    StartCoroutine("Stop", 0.1f);
                     paused = true;
                 }
             }
