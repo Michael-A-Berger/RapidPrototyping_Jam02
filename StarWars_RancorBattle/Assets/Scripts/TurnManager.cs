@@ -115,69 +115,72 @@ public class TurnManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (paused) return;
-        CheckForEndGame();
-
-        // IF the Turn Manager is attempting to complete a round...
-        if (attemptingRound)
+        if (!gameOver)
         {
-            // IF the current turn object is not the last object...
-            if (currentIndex < objectList.Count)
-            {
+            if (paused) return;
+            CheckForEndGame();
 
-                ///
-                
-                if (currentIndex != objectList.Count - 1)
+            // IF the Turn Manager is attempting to complete a round...
+            if (attemptingRound)
+            {
+                // IF the current turn object is not the last object...
+                if (currentIndex < objectList.Count)
                 {
-                    if (objectList[currentIndex].GetComponent<CharacterBase>().isDowned)
-                        objectList[currentIndex].CompleteTurn();
+
+                    ///
+
+                    if (currentIndex != objectList.Count - 1)
+                    {
+                        if (objectList[currentIndex].GetComponent<CharacterBase>().isDowned)
+                            objectList[currentIndex].CompleteTurn();
+                        else
+                        {
+                            HandlePlayer();
+                            if (paused) return;
+                        }
+                    }
                     else
                     {
-                        HandlePlayer();
-                        if (paused) return;
+                        HandleAI(objectList[objectList.Count - 1].GetComponent<CharacterBase>());
+                        Debug.Log("AI TURN");
+                        CharacterBase recipient = objectList[Random.Range(0, objectList.Count - 1)];
+                        recipient.AddSpecial();
+                        FloatText.CreateFloatText("Specialable", new Color(1, 1, 0), recipient.transform.position + 2 * Vector3.up);
+                    }
+                    ///
+
+                    // IF the current turn object has completed its action...
+                    if (objectList[currentIndex].hasCompletedTurn)
+                    {
+                        // Telling the current object that it's turn is over
+                        objectList[currentIndex].isCurrentTurn = false;
+                        currentIndex++;
+                        special = false;
+
+                        // IF the previous object was not the last object...
+                        if (currentIndex < objectList.Count)
+                        {
+                            // Telling the next object that it is the current turn
+                            objectList[currentIndex].isCurrentTurn = true;
+                            MoveCamera();
+
+                            if (debug) Debug_CurrentTurn();
+                        }
                     }
                 }
                 else
-                { 
-                    HandleAI(objectList[objectList.Count - 1].GetComponent<CharacterBase>()); 
-                    Debug.Log("AI TURN");
-                    CharacterBase recipient = objectList[Random.Range(0, objectList.Count - 1)];
-                    recipient.AddSpecial();
-                    FloatText.CreateFloatText("Specialable", new Color(1, 1, 0), recipient.transform.position + 2 * Vector3.up);
-                }
-                ///
-
-                // IF the current turn object has completed its action...
-                if (objectList[currentIndex].hasCompletedTurn)
                 {
-                    // Telling the current object that it's turn is over
-                    objectList[currentIndex].isCurrentTurn = false;
-                    currentIndex++;
-                    special = false;
-
-                    // IF the previous object was not the last object...
-                    if (currentIndex < objectList.Count)
+                    // End the round
+                    attemptingRound = false;
+                    foreach (CharacterBase prop in objectList)
                     {
-                        // Telling the next object that it is the current turn
-                        objectList[currentIndex].isCurrentTurn = true;
-                        MoveCamera();
-
-                        if (debug) Debug_CurrentTurn();
+                        prop.hasCompletedTurn = false;
+                        prop.isCurrentTurn = false;
                     }
+                    if (debug) Debug.Log("End of Round!");
+
+                    StartRound();
                 }
-            }
-            else
-            {
-                // End the round
-                attemptingRound = false;
-                foreach (CharacterBase prop in objectList)
-                {
-                    prop.hasCompletedTurn = false;
-                    prop.isCurrentTurn = false;
-                }
-                if (debug) Debug.Log("End of Round!");
-                
-                StartRound();
             }
         }
     }
