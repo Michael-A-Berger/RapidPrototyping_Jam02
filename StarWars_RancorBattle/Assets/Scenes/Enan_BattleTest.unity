@@ -277,6 +277,7 @@ MonoBehaviour:
   - {fileID: 969150803}
   - {fileID: 1760628666}
   paused: 0
+  statPref: {fileID: 308267763836076431, guid: 8fa07d5d3292e0c4eb05983a4c4017bf, type: 3}
   spawnPositions: []
 --- !u!1 &306892150
 GameObject:
