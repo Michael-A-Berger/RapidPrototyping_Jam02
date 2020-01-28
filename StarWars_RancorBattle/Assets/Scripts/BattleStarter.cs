@@ -9,7 +9,7 @@ public class BattleStarter : MonoBehaviour
     [SerializeField]
     List<string> players;
     [SerializeField]
-    GameObject mandoPref, wookPref, jedPref, boPref;
+    GameObject mandoPref, wookPref, jedPref, boPref, statPref;
     [SerializeField]
     TurnManager turnyBernie;
     readonly Vector3 separation = 2.5f * Vector3.right;
@@ -85,12 +85,13 @@ public class BattleStarter : MonoBehaviour
 
                 CharacterBase script = Instantiate(current, spawnLocations[num], Quaternion.identity).GetComponent<CharacterBase>();
                 playerObjects.Add(script);
+                Instantiate(statPref).GetComponent<StatDisplay>().SetCharacter(script);
                 turnyBernie.objectList.Add(script);
             }
             GameObject badddie = GameObject.Find("Rancor");
             boss = badddie.GetComponent<CharacterBase>();
-
-            foreach(CharacterBase player in playerObjects)
+            Instantiate(statPref).GetComponent<StatDisplay>().SetCharacter(boss);
+            foreach (CharacterBase player in playerObjects)
             {
                 player.currentEnemy = boss;
             }

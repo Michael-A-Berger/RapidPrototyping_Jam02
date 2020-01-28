@@ -234,6 +234,7 @@ MonoBehaviour:
     type: 3}
   jedPref: {fileID: 2043287725806457629, guid: 20e830d6a534bae48bb276495d639b62, type: 3}
   boPref: {fileID: 5359209776219877567, guid: 818aa58bb8364cd40b7ae98ad01cbbc7, type: 3}
+  statPref: {fileID: 308267763836076431, guid: 8fa07d5d3292e0c4eb05983a4c4017bf, type: 3}
   turnyBernie: {fileID: 244349302}
   playerPrefsKey: SelectedPlayers
   debug: 1

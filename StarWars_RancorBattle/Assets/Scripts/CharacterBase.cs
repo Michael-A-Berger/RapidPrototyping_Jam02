@@ -13,7 +13,7 @@ public class CharacterBase : MonoBehaviour
     [SerializeField]
     int attack;
     [SerializeField]
-    int special;
+    public int special;
     public bool CanSpecial { get { return special > 0; } }
     public bool isDowned;
     public CharacterBase currentEnemy;
